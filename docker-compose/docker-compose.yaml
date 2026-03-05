@@ -1,0 +1,29 @@
+services:
+  rendcore_budget_db:
+    image: postgres:17.2
+    container_name: rendcore_budget_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=rendcore_budget_db
+      - POSTGRES_USER=rendcore_budget
+      - POSTGRES_PASSWORD=rendcore_budget
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - rendcore_network_budget
+
+  rendcore_budget_email:
+    image: rnwood/smtp4dev:latest
+    container_name: smtp4dev_budget
+    ports:
+      - "1025:25"
+      - "2500:80"
+    environment:
+      - TZ=Europe/Rome
+    networks:
+      - rendcore_network_budget
+
+networks:
+  rendcore_network_budget:
+    driver: bridge
